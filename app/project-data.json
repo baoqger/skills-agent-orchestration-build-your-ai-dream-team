@@ -1,0 +1,46 @@
+{
+  "projects": [
+    {
+      "name": "Project Pulse Dashboard",
+      "owner": "Maya Chen",
+      "status": "On Track",
+      "recentActivity": "Completed dashboard wireframe review and locked launch workflow.",
+      "priority": "High"
+    },
+    {
+      "name": "Customer Onboarding Refresh",
+      "owner": "Jordan Alvarez",
+      "status": "At Risk",
+      "recentActivity": "Waiting on legal approval for updated welcome sequence copy.",
+      "priority": "Critical"
+    },
+    {
+      "name": "Incident Response Playbook",
+      "owner": "Priya Natarajan",
+      "status": "On Track",
+      "recentActivity": "Published draft escalation matrix for operations team feedback.",
+      "priority": "Medium"
+    },
+    {
+      "name": "Mobile Release 3.4",
+      "owner": "Ethan Brooks",
+      "status": "Blocked",
+      "recentActivity": "Release candidate paused after payment flow regression surfaced in QA.",
+      "priority": "Critical"
+    },
+    {
+      "name": "Data Quality Audit",
+      "owner": "Sofia Martinez",
+      "status": "Planning",
+      "recentActivity": "Defined source system checklist and assigned audit owners.",
+      "priority": "Medium"
+    },
+    {
+      "name": "Knowledge Base Migration",
+      "owner": "Noah Patel",
+      "status": "On Track",
+      "recentActivity": "Migrated 48 legacy articles and validated search redirects.",
+      "priority": "Low"
+    }
+  ]
+}

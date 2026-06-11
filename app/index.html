@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Pulse</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="dashboard" aria-labelledby="dashboard-title">
+      <header class="dashboard-header">
+        <div>
+          <p class="eyebrow">Team portfolio</p>
+          <h1 id="dashboard-title">Project Pulse</h1>
+          <p class="dashboard-intro">
+            Track ownership, momentum, and priority across active workstreams.
+          </p>
+        </div>
+        <p class="dashboard-summary" id="project-count">Loading projects…</p>
+      </header>
+
+      <p class="dashboard-message" id="dashboard-status" role="status" aria-live="polite">
+        Loading project data from project-data.json…
+      </p>
+
+      <template id="project-card-template">
+        <article class="project-card">
+          <header class="card-header">
+            <div>
+              <h2 class="project-name"></h2>
+            </div>
+            <span class="badge badge--status project-status"></span>
+          </header>
+
+          <div class="card-body">
+            <p class="project-owner"></p>
+            <div class="project-activity">
+              <p class="field-label">
+                Recent activity
+                <span class="visually-hidden">recentActivity</span>
+              </p>
+              <p class="project-recent-activity"></p>
+            </div>
+          </div>
+
+          <footer class="card-footer">
+            <span class="badge badge--priority project-priority"></span>
+          </footer>
+        </article>
+      </template>
+    </main>
+
+    <script>
+      const dashboard = document.querySelector(".dashboard");
+      const projectTemplate = document.querySelector("#project-card-template");
+      const dashboardStatus = document.querySelector("#dashboard-status");
+      const projectCount = document.querySelector("#project-count");
+
+      const badgeClassSuffix = (value) =>
+        String(value || "")
+          .trim()
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+
+      const setMessage = (message, isError = false) => {
+        dashboardStatus.hidden = false;
+        dashboardStatus.textContent = message;
+        dashboardStatus.classList.toggle("dashboard-message--error", isError);
+        dashboardStatus.setAttribute("role", isError ? "alert" : "status");
+      };
+
+      const renderProjects = (projects) => {
+        const cards = projects.map((project) => {
+          const card = projectTemplate.content.firstElementChild.cloneNode(true);
+          const statusSuffix = badgeClassSuffix(project.status);
+          const prioritySuffix = badgeClassSuffix(project.priority);
+
+          card.querySelector(".project-name").textContent = project.name;
+          card.querySelector(".project-owner").textContent = `Owner: ${project.owner}`;
+
+          const statusBadge = card.querySelector(".project-status");
+          statusBadge.textContent = project.status;
+          statusBadge.classList.add(`badge--${statusSuffix}`);
+
+          card.querySelector(".project-recent-activity").textContent =
+            project.recentActivity;
+
+          const priorityBadge = card.querySelector(".project-priority");
+          priorityBadge.textContent = `Priority: ${project.priority}`;
+          priorityBadge.classList.add(`badge--${prioritySuffix}`);
+
+          return card;
+        });
+
+        dashboard.append(...cards);
+      };
+
+      fetch("project-data.json")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Unable to load project data (${response.status}).`);
+          }
+
+          return response.json();
+        })
+        .then((data) => {
+          if (!data || !Array.isArray(data.projects)) {
+            throw new Error("Project data is missing the expected projects array.");
+          }
+
+          renderProjects(data.projects);
+          dashboardStatus.hidden = true;
+          projectCount.textContent = `${data.projects.length} active projects`;
+        })
+        .catch((error) => {
+          projectCount.textContent = "Project data unavailable";
+          setMessage(`Could not load dashboard data. ${error.message}`, true);
+        });
+    </script>
+  </body>
+</html>
